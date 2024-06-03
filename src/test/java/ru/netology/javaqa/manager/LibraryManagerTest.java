@@ -4,38 +4,38 @@ import ru.netology.javaqa.domain.Book;
 import ru.netology.javaqa.domain.Member;
 import ru.netology.javaqa.exceptions.AlreadyLoanedException;
 import ru.netology.javaqa.exceptions.NotLoanedException;
-import ru.netology.javaqa.repository.Library;
+import ru.netology.javaqa.repository.LibraryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LibraryAppTest {
-    private Library library;
+class LibraryManagerTest {
+    private LibraryRepository libraryRepository;
     private Member member1;
     private Member member2;
 
     @BeforeEach
     void setUp() {
-        library = Library.getInstance();
-        library.clearBooks();
+        libraryRepository = LibraryRepository.getInstance();
+        libraryRepository.clearBooks();
 
         member1 = new Member("Alice");
         member2 = new Member("Bob");
 
-        LibraryApp.setupLibrary(library);
+        LibraryManager.setupLibrary(libraryRepository);
     }
 
     @Test
     void testSetupLibrary() {
-        assertNotNull(library.findBookByTitle("1984"));
-        assertNotNull(library.findBookByTitle("To Kill a Mockingbird"));
+        assertNotNull(libraryRepository.findBookByTitle("1984"));
+        assertNotNull(libraryRepository.findBookByTitle("To Kill a Mockingbird"));
     }
 
     @Test
     void testLoanBook() {
-        Book book = library.findBookByTitle("1984");
-        LibraryApp.loanBook(library, "1984", member1);
+        Book book = libraryRepository.findBookByTitle("1984");
+        LibraryManager.loanBook(libraryRepository, "1984", member1);
         // Here we directly call the loanTo method to trigger the AlreadyLoanedException
         assertThrows(AlreadyLoanedException.class, () -> book.loanTo(member2));
     }
@@ -43,14 +43,14 @@ class LibraryAppTest {
     @Test
     void testLoanBookNotFound() {
         // This should simply print an error message, no exception to test
-        LibraryApp.loanBook(library, "Nonexistent Book", member1);
+        LibraryManager.loanBook(libraryRepository, "Nonexistent Book", member1);
     }
 
     @Test
     void testReturnBook() throws AlreadyLoanedException, NotLoanedException {
-        Book book = library.findBookByTitle("1984");
-        LibraryApp.loanBook(library, "1984", member1);
-        LibraryApp.returnBook(library, "1984");
+        Book book = libraryRepository.findBookByTitle("1984");
+        LibraryManager.loanBook(libraryRepository, "1984", member1);
+        LibraryManager.returnBook(libraryRepository, "1984");
         // Here we directly call the returnItem method to trigger the NotLoanedException
         assertThrows(NotLoanedException.class, book::returnItem);
     }
@@ -58,13 +58,13 @@ class LibraryAppTest {
     @Test
     void testReturnBookNotFound() {
         // This should simply print an error message, no exception to test
-        LibraryApp.returnBook(library, "Nonexistent Book");
+        LibraryManager.returnBook(libraryRepository, "Nonexistent Book");
     }
 
     @Test
     void testMain() {
         // Note: This is a basic test to check if the main method runs without exceptions
         // Detailed testing should be done for individual components
-        LibraryApp.main(new String[]{});
+        LibraryManager.main(new String[]{});
     }
 }

@@ -8,14 +8,14 @@ import java.util.List;
 /**
  * Singleton class representing the library.
  */
-public class Library {
-    private static Library instance; // Singleton instance of the library
+public class LibraryRepository {
+    private static LibraryRepository instance; // Singleton instance of the library
     private final List<Book> books;  // List of books in the library
 
     /**
      * Private constructor to prevent instantiation.
      */
-    private Library() {
+    private LibraryRepository() {
         this.books = new ArrayList<>();
     }
 
@@ -24,9 +24,9 @@ public class Library {
      *
      * @return The singleton instance of the library.
      */
-    public static synchronized Library getInstance() {
+    public static synchronized LibraryRepository getInstance() {
         if (instance == null) { // Create the instance if it doesn't exist
-            instance = new Library();
+            instance = new LibraryRepository();
         }
         return instance;
     }
